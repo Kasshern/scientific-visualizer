@@ -1,0 +1,38 @@
+# Rust
+/target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.o
+*.so
+*.dylib
+*.dll
+*.a
+
+# WASM
+crates/viz-wasm/www/pkg/
+crates/viz-wasm/www/node_modules/
+
+# Data files (too large for git)
+data/*.large
+data/*.bin
+
+# Logs
+*.log
+
+# Profiling
+perf.data*
+flamegraph.svg

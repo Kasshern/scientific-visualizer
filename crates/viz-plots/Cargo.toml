@@ -1,0 +1,17 @@
+[package]
+name = "viz-plots"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+viz-core = { path = "../viz-core" }
+
+wgpu = { workspace = true }
+bytemuck = { workspace = true }
+glam = { workspace = true }
+
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }

@@ -1,0 +1,18 @@
+[package]
+name = "examples"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[[bin]]
+name = "basic_window"
+path = "src/bin/basic_window.rs"
+
+[dependencies]
+viz-core = { path = "../viz-core" }
+wgpu = { workspace = true }
+winit = { workspace = true }
+pollster = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
