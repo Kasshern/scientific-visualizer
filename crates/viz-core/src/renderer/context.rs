@@ -45,8 +45,9 @@ impl RenderContext {
     /// ```no_run
     /// use viz_core::RenderContext;
     /// use winit::window::Window;
+    /// use std::sync::Arc;
     ///
-    /// async fn init(window: &Window) {
+    /// async fn init(window: Arc<Window>) {
     ///     let context = RenderContext::new(window).await.unwrap();
     ///     println!("GPU: {}", context.adapter_info.name);
     /// }
