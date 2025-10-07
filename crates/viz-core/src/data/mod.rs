@@ -1,1 +1,5 @@
-// Data structures module - will implement in Phase 3
+mod dataset;
+mod point_cloud;
+
+pub use dataset::Dataset;
+pub use point_cloud::PointCloud;
