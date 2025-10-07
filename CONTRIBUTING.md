@@ -7,8 +7,10 @@ Thank you for your interest in contributing to Scientific Visualizer! This docum
 This is currently a **portfolio/learning project** in active development. We're building this in phases:
 
 - ✅ **Phase 1** (Complete): Foundation & GPU Context
-- 🚧 **Phase 2** (Next): Camera & Math System
-- 📋 **Phase 3-10**: See [ROADMAP.md](docs/ROADMAP.md)
+- ✅ **Phase 2** (Complete): Camera & Math System
+- ✅ **Phase 3** (Complete): Basic Data & Rendering
+- 🚧 **Phase 4** (Next): UI Integration
+- 📋 **Phase 5-10**: See [ROADMAP.md](docs/ROADMAP.md)
 
 ## Development Philosophy
 
@@ -52,8 +54,10 @@ cargo build --workspace
 # Run tests
 cargo test --workspace
 
-# Run example
+# Run examples
 cargo run -p examples --bin basic_window
+cargo run -p examples --bin camera_movement
+cargo run -p examples --bin scatter_3d
 ```
 
 ### Development Tools
