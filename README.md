@@ -2,9 +2,9 @@
 
 A high-performance scientific data visualization engine in Rust with GPU acceleration, cross-platform support (native + WASM), and real-time rendering capabilities.
 
-## Status: Phase 1 Complete ✓
+## Status: Phase 2 Complete ✓
 
-**GPU Context & Foundation** - GPU initialization, window management, and basic rendering infrastructure are working.
+**Camera & Math Systems** - Orbital camera with full controls, bounding boxes, and transformation utilities.
 
 ## Features (Planned)
 
@@ -25,6 +25,9 @@ cd scientific-visualizer
 
 # Run the basic window example
 cargo run -p examples --bin basic_window
+
+# Run the interactive camera example
+cargo run -p examples --bin camera_movement
 ```
 
 ## Project Structure
@@ -50,20 +53,24 @@ scientific-visualizer/
 - **Data**: arrow 50.0, parquet 50.0, ndarray 0.15
 - **Async**: tokio 1.35, rayon 1.8
 
-## Phase 1 Complete ✓
+## Phase 2 Complete ✓
 
-- [x] Workspace structure created
-- [x] GPU context initialization
-- [x] Window management with winit
-- [x] Basic render loop
-- [x] Logging with tracing
-- [x] Clear screen to solid color
+- [x] Bounds3D (AABB) implementation
+- [x] Transform utilities (TRS matrices)
+- [x] OrbitalCamera with full 3D controls
+- [x] Mouse input (rotate, pan, zoom)
+- [x] Interactive camera_movement example
+- [x] 23 tests passing
+- [x] 120 FPS performance
 
-**GPU Tested On**: Apple M1 Max (Metal backend)
+**Phase 1**: ✅ GPU Context & Foundation
+**Phase 2**: ✅ Camera & Math Systems
 
-## Next: Phase 2 - Camera & Math
+**Tested On**: Apple M1 Max (Metal backend)
 
-Coming soon: Orbital camera with view/projection matrices, mouse input handling, and basic math utilities.
+## Next: Phase 3 - Basic Data & Rendering
+
+Coming soon: PointCloud data structure, scatter plot rendering, and WGSL shaders.
 
 ## License
 
