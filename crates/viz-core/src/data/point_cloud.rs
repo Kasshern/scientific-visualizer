@@ -7,7 +7,7 @@ use std::collections::HashMap;
 ///
 /// # Examples
 /// ```
-/// use viz_core::data::PointCloud;
+/// use viz_core::data::{Dataset, PointCloud};
 /// use glam::{Vec3, Vec4};
 ///
 /// let positions = vec![
