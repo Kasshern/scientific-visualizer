@@ -1,1 +1,5 @@
-// Math utilities module - will implement in Phase 2
+mod bounds;
+mod transform;
+
+pub use bounds::Bounds3D;
+pub use transform::Transform;
