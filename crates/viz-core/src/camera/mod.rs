@@ -1,4 +1,3 @@
-// Camera module - will implement in Phase 2
 mod orbital;
 mod orthographic;
 
