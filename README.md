@@ -2,9 +2,9 @@
 
 A high-performance scientific data visualization engine in Rust with GPU acceleration, cross-platform support (native + WASM), and real-time rendering capabilities.
 
-## Status: Phase 3 Complete ✓
+## Status: Phase 4 Complete ✓
 
-**Basic Data & Rendering** - 3D scatter plots with GPU acceleration, interactive controls, and 120 FPS @ 1K points.
+**UI Integration** - Professional egui interface with performance metrics, interactive controls, and real-time visualization tuning.
 
 ## Features (Planned)
 
@@ -33,6 +33,11 @@ cargo run -p examples --bin camera_movement
 cargo run -p examples --bin scatter_3d
 # Controls: Left-drag to rotate, Shift-drag to pan, Scroll to zoom
 # Press 1 for spiral (1K points), 2 for cube (10K points), R to reset
+
+# Run the 3D scatter plot with UI (Phase 4) ⭐ RECOMMENDED
+cargo run -p examples --bin scatter_3d_ui
+# Full UI with performance metrics, point size control, dataset selector
+# Press H to toggle UI visibility
 ```
 
 ## Project Structure
@@ -58,26 +63,29 @@ scientific-visualizer/
 - **Data**: arrow 50.0, parquet 50.0, ndarray 0.15
 - **Async**: tokio 1.35, rayon 1.8
 
-## Phase 3 Complete ✓
+## Phase 4 Complete ✓
 
-- [x] Dataset trait for generic data interface
-- [x] PointCloud data structure with colors/metadata
-- [x] Scatter3D GPU-accelerated renderer
-- [x] WGSL shader with distance-based fading
-- [x] CameraUniforms for GPU upload
-- [x] Interactive scatter_3d example
-- [x] 35 tests passing
-- [x] 120 FPS @ 1K points, 60+ FPS @ 10K points
+- [x] egui-wgpu integration (UiContext)
+- [x] Performance metrics tracking and display
+- [x] Real-time FPS counter with frame time graph
+- [x] Control panel with interactive sliders
+- [x] Point size adjustment (1-20 pixels)
+- [x] Dataset selector dropdown
+- [x] Background color picker
+- [x] H key to toggle UI visibility
+- [x] 39 tests passing (all phases)
+- [x] 60+ FPS with UI enabled @ 10K points
 
 **Phase 1**: ✅ GPU Context & Foundation
 **Phase 2**: ✅ Camera & Math Systems
 **Phase 3**: ✅ Basic Data & Rendering
+**Phase 4**: ✅ UI Integration
 
 **Tested On**: Apple M1 Max (Metal backend)
 
-## Next: Phase 4 - UI Integration
+## Next: Phase 5 - Colormap System
 
-Coming soon: egui integration for interactive controls, parameter tuning, and data inspection.
+Coming soon: Scientific colormaps (Viridis, Plasma, Inferno) for data-driven coloring.
 
 ## License
 

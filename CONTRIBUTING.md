@@ -9,8 +9,9 @@ This is currently a **portfolio/learning project** in active development. We're 
 - ✅ **Phase 1** (Complete): Foundation & GPU Context
 - ✅ **Phase 2** (Complete): Camera & Math System
 - ✅ **Phase 3** (Complete): Basic Data & Rendering
-- 🚧 **Phase 4** (Next): UI Integration
-- 📋 **Phase 5-10**: See [ROADMAP.md](docs/ROADMAP.md)
+- ✅ **Phase 4** (Complete): UI Integration
+- 🚧 **Phase 5** (Next): Colormap System
+- 📋 **Phase 6-10**: See [ROADMAP.md](docs/ROADMAP.md)
 
 ## Development Philosophy
 
@@ -58,6 +59,7 @@ cargo test --workspace
 cargo run -p examples --bin basic_window
 cargo run -p examples --bin camera_movement
 cargo run -p examples --bin scatter_3d
+cargo run -p examples --bin scatter_3d_ui
 ```
 
 ### Development Tools
