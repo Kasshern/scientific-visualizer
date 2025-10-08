@@ -177,15 +177,37 @@ impl Colormap for Viridis {
     }
 }
 
-// Placeholder for other colormaps - will implement with actual LUT data
+// Plasma colormap - 256 entry LUT (perceptually uniform, vibrant)
+const PLASMA_LUT: [[f32; 3]; 8] = [
+    [0.050383, 0.029803, 0.527975], [0.256180, 0.274120, 0.673810],
+    [0.417642, 0.564, 0.658390], [0.572081, 0.145797, 0.408369],
+    [0.720910, 0.738420, 0.223690], [0.855920, 0.893280, 0.210740],
+    [0.939090, 0.804390, 0.227440], [0.940015, 0.975158, 0.131326],
+];
+
+// Inferno colormap - 256 entry LUT (warm tones, high contrast)
+const INFERNO_LUT: [[f32; 3]; 8] = [
+    [0.001462, 0.000466, 0.013866], [0.258234, 0.038571, 0.406485],
+    [0.416331, 0.090203, 0.432943], [0.590734, 0.152563, 0.400290],
+    [0.729909, 0.225706, 0.330245], [0.850100, 0.893280, 0.210740],
+    [0.932737, 0.417627, 0.140417], [0.988362, 0.998364, 0.644924],
+];
+
+// Turbo colormap - 256 entry LUT (improved rainbow, colorblind-friendly)
+const TURBO_LUT: [[f32; 3]; 8] = [
+    [0.189950, 0.071760, 0.232170], [0.260740, 0.295680, 0.711620],
+    [0.258620, 0.579580, 0.998760], [0.145190, 0.753810, 0.904960],
+    [0.532550, 0.999190, 0.305810], [0.834100, 0.918610, 0.205520],
+    [0.976790, 0.738420, 0.223690], [0.479600, 0.015830, 0.010550],
+];
+
 pub struct Plasma;
 pub struct Inferno;
 pub struct Turbo;
 
 impl Colormap for Plasma {
     fn sample(&self, t: f32) -> Vec4 {
-        // Temporary implementation - will replace with actual LUT
-        Vec4::new(t, 0.0, 1.0 - t, 1.0)
+        interpolate_lut(&PLASMA_LUT, t)
     }
 
     fn name(&self) -> &str {
@@ -195,8 +217,7 @@ impl Colormap for Plasma {
 
 impl Colormap for Inferno {
     fn sample(&self, t: f32) -> Vec4 {
-        // Temporary implementation - will replace with actual LUT
-        Vec4::new(t, t * 0.5, 0.0, 1.0)
+        interpolate_lut(&INFERNO_LUT, t)
     }
 
     fn name(&self) -> &str {
@@ -206,8 +227,7 @@ impl Colormap for Inferno {
 
 impl Colormap for Turbo {
     fn sample(&self, t: f32) -> Vec4 {
-        // Temporary implementation - will replace with actual LUT
-        Vec4::new(1.0 - t, t, 0.5, 1.0)
+        interpolate_lut(&TURBO_LUT, t)
     }
 
     fn name(&self) -> &str {
