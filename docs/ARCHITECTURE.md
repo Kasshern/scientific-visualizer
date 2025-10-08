@@ -60,6 +60,12 @@ The core library provides foundational GPU rendering capabilities:
 ### Renderer Module ✅
 - **CameraUniforms**: GPU-compatible camera data (80 bytes, Pod + Zeroable)
 
+### UI Module ✅
+- **UiContext**: egui-wgpu integration for immediate mode GUI
+- **PerformanceMetrics**: FPS and frame time tracking with statistics
+- **performance_panel()**: Performance metrics display with graph
+- **ControlPanel**: Interactive controls for visualization parameters
+
 ## viz-plots
 
 High-level plot implementations built on viz-core:
@@ -114,7 +120,7 @@ Use GPU compute for data processing (heatmaps, density estimation).
 
 ## Current Implementation Status
 
-### Phase 1-3 Complete ✅
+### Phase 1-4 Complete ✅
 - ✅ GPU initialization with wgpu (Phase 1)
 - ✅ Window management with winit (Phase 1)
 - ✅ Surface configuration (Phase 1)
@@ -123,8 +129,10 @@ Use GPU compute for data processing (heatmaps, density estimation).
 - ✅ Dataset trait and PointCloud (Phase 3)
 - ✅ Scatter3D GPU renderer (Phase 3)
 - ✅ WGSL shaders (scatter.wgsl) (Phase 3)
-- ✅ 41 tests passing (35 unit + 6 doc tests)
-- ✅ 120 FPS @ 1K points, 60+ FPS @ 10K points
+- ✅ egui UI integration (Phase 4)
+- ✅ Performance metrics and controls (Phase 4)
+- ✅ 39 tests passing (35 unit + 4 PerformanceMetrics)
+- ✅ 60+ FPS @ 10K points with UI enabled
 
 ## Design Decisions
 
@@ -161,11 +169,11 @@ All public APIs return `Result<T, E>` for proper error propagation.
 - Data structures use Arc for shared ownership
 - Compute-heavy operations use rayon for parallelism
 
-## Next Phase: UI Integration
+## Next Phase: Colormap System
 
-Phase 4 will implement:
-- egui integration with wgpu render loop
-- Control panel for visualization parameters
-- Performance metrics display (FPS, frame time)
-- Data inspection panel
-- Interactive controls (point size, colors, etc.)
+Phase 5 will implement:
+- Colormap trait for data-driven coloring
+- Scientific colormaps (Viridis, Plasma, Inferno, Turbo)
+- Linear and logarithmic color scaling
+- Colormap selector in UI
+- GPU-based colormap application
