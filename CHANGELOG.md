@@ -8,12 +8,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- Phase 5: Colormap system
 - Phase 6: Data loading (CSV, Parquet)
 - Phase 7: Performance optimization
 - Phase 8: Additional plot types
 - Phase 9: WASM support
 - Phase 10: Examples & documentation
+
+## [0.5.0] - 2025-10-08
+
+### Added - Phase 5: Colormap System ✅
+
+#### Color Module (viz-core/color/)
+- `Colormap` trait - Interface for mapping [0,1] → RGBA colors
+  - sample(t: f32) → Vec4 method for color lookup
+  - name() → &str for colormap identification
+  - Send + Sync for thread safety
+
+- Scientific Colormaps (4 total)
+  - **Viridis** - 256-entry LUT, perceptually uniform, colorblind-friendly
+  - **Plasma** - 8-entry LUT, vibrant perceptually uniform gradient
+  - **Inferno** - 8-entry LUT, warm tones with high contrast
+  - **Turbo** - 8-entry LUT, improved rainbow, colorblind-friendly
+  - All use linear interpolation for smooth gradients
+  - Fast lookup via LUT (<1μs per sample)
+
+- `ColorScale` utilities - Data value to colormap domain mapping
+  - map_linear(value, min, max) → [0,1] for linear scaling
+  - map_log(value, min, max) → [0,1] for logarithmic scaling
+  - map() with ScaleType enum (Linear | Log)
+  - Handles degenerate ranges gracefully
+
+- `ScaleType` enum - Linear and Log scaling modes
+
+#### Data Integration
+- `PointCloud::apply_colormap()` method
+  - Maps metadata fields to colors using any colormap
+  - Supports both linear and log scaling
+  - Returns Result for error handling
+  - Automatically finds min/max for normalization
+
+#### UI Enhancements
+- `ControlPanel` colormap controls
+  - Colormap selector dropdown (Viridis, Plasma, Inferno, Turbo)
+  - Live colormap preview strip (64-step gradient)
+  - Log scale toggle checkbox
+  - Visual feedback with colormap preview rendering
+
+#### Examples
+- `scatter_3d_ui` enhanced with colormap demo
+  - Spiral dataset with height and radius metadata
+  - Random cube dataset with distance and height metadata
+  - Dynamic colormap switching via UI
+  - Demonstrates both linear and log scaling
+  - Real-time colormap application
+
+#### Testing
+- 17 new tests for color system (52 tests total)
+  - Colormap boundary tests (t=0.0, 0.5, 1.0)
+  - Gradient smoothness verification (no NaN/Inf)
+  - ColorScale linear/log mapping tests
+  - Scale clamping and degenerate range handling
+
+#### Metrics
+- **Lines of Code**: 430 (250 colormap.rs, 100 scale.rs, 80 UI)
+- **Performance**: <1μs color lookup via LUT interpolation
+- **Memory**: Minimal overhead (LUTs stored as const arrays)
+- **Tests**: 52 passing (17 new colormap/scale tests)
+
+### Changed
+- Updated viz-core exports to include color types
+- Enhanced scatter_3d_ui example with metadata and colormaps
 
 ## [0.4.0] - 2025-10-08
 

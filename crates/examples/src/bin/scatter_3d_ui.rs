@@ -5,8 +5,8 @@ use std::sync::Arc;
 use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 use viz_core::{
-    performance_panel, ControlPanel, Dataset, OrbitalCamera, PerformanceMetrics, PointCloud,
-    RenderContext, UiContext,
+    performance_panel, Colormap, ControlPanel, Dataset, Inferno, OrbitalCamera,
+    PerformanceMetrics, Plasma, PointCloud, RenderContext, ScaleType, Turbo, UiContext, Viridis,
 };
 use viz_plots::Scatter3D;
 use winit::{
@@ -36,6 +36,8 @@ impl InputState {
 /// Generate a spiral of points for visualization
 fn generate_spiral_points(num_points: usize) -> PointCloud {
     let mut positions = Vec::with_capacity(num_points);
+    let mut heights = Vec::with_capacity(num_points);
+    let mut radii = Vec::with_capacity(num_points);
 
     for i in 0..num_points {
         let t = (i as f32 / num_points as f32) * 4.0 * PI;
@@ -46,10 +48,19 @@ fn generate_spiral_points(num_points: usize) -> PointCloud {
         let z = radius * t.sin();
 
         positions.push(Vec3::new(x, y, z));
+        heights.push(y);
+        radii.push(radius);
     }
 
-    let mut cloud = PointCloud::new(positions);
-    cloud.generate_height_colors(); // Color by height
+    let mut cloud = PointCloud::new(positions)
+        .with_metadata("height".to_string(), heights)
+        .with_metadata("radius".to_string(), radii);
+
+    // Apply Viridis colormap by default to height field
+    cloud
+        .apply_colormap("height", &Viridis, ScaleType::Linear)
+        .unwrap();
+
     cloud.with_name("Spiral (1K points)")
 }
 
@@ -58,16 +69,29 @@ fn generate_cube_points(num_points: usize) -> PointCloud {
     use rand::Rng;
     let mut rng = rand::thread_rng();
     let mut positions = Vec::with_capacity(num_points);
+    let mut distances = Vec::with_capacity(num_points);
+    let mut heights = Vec::with_capacity(num_points);
 
     for _ in 0..num_points {
-        let x = rng.gen_range(-5.0..5.0);
-        let y = rng.gen_range(-5.0..5.0);
-        let z = rng.gen_range(-5.0..5.0);
+        let x: f32 = rng.gen_range(-5.0..5.0);
+        let y: f32 = rng.gen_range(-5.0..5.0);
+        let z: f32 = rng.gen_range(-5.0..5.0);
+        let dist = (x * x + y * y + z * z).sqrt();
+
         positions.push(Vec3::new(x, y, z));
+        distances.push(dist);
+        heights.push(y);
     }
 
-    let mut cloud = PointCloud::new(positions);
-    cloud.generate_height_colors();
+    let mut cloud = PointCloud::new(positions)
+        .with_metadata("distance".to_string(), distances)
+        .with_metadata("height".to_string(), heights);
+
+    // Apply Plasma colormap to distance field
+    cloud
+        .apply_colormap("distance", &Plasma, ScaleType::Linear)
+        .unwrap();
+
     cloud.with_name("Random Cube (10K points)")
 }
 
@@ -248,6 +272,8 @@ fn main() -> Result<()> {
                                 // Draw control panel
                                 let old_dataset = control_panel.dataset_index;
                                 let old_point_size = control_panel.point_size;
+                                let old_colormap = control_panel.colormap_index;
+                                let old_log_scale = control_panel.use_log_scale;
 
                                 let dataset_refs: Vec<&str> = dataset_names.iter().map(|s| s.as_str()).collect();
                                 control_panel.show(&ctx, &dataset_refs);
@@ -268,6 +294,33 @@ fn main() -> Result<()> {
                                 // Handle point size change
                                 if control_panel.point_size != old_point_size {
                                     scatter.set_point_size(control_panel.point_size);
+                                }
+
+                                // Handle colormap or scale change
+                                if control_panel.colormap_index != old_colormap || control_panel.use_log_scale != old_log_scale {
+                                    let colormap: &dyn Colormap = match control_panel.colormap_index {
+                                        0 => &Viridis,
+                                        1 => &Plasma,
+                                        2 => &Inferno,
+                                        3 => &Turbo,
+                                        _ => &Viridis,
+                                    };
+                                    let scale_type = if control_panel.use_log_scale {
+                                        ScaleType::Log
+                                    } else {
+                                        ScaleType::Linear
+                                    };
+
+                                    // Apply colormap to the current dataset's first metadata field
+                                    let mut dataset_clone = datasets[control_panel.dataset_index].clone();
+                                    let metadata_keys = dataset_clone.metadata_keys();
+                                    if !metadata_keys.is_empty() {
+                                        let field = metadata_keys[0].clone();
+                                        dataset_clone.apply_colormap(&field, colormap, scale_type).ok();
+                                        scatter = Scatter3D::new(&render_context, &dataset_clone).unwrap();
+                                        info!("Applied {} colormap with {:?} scale to field '{}'",
+                                              colormap.name(), scale_type, field);
+                                    }
                                 }
                             }
 
