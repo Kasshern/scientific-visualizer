@@ -1,4 +1,5 @@
 use super::Dataset;
+use crate::color::{Colormap, ColorScale, ScaleType};
 use crate::math::Bounds3D;
 use glam::{Vec3, Vec4};
 use std::collections::HashMap;
@@ -168,6 +169,58 @@ impl PointCloud {
             .collect();
 
         self.colors = Some(colors);
+    }
+
+    /// Apply colormap to points based on metadata field
+    ///
+    /// Maps a metadata field to colors using the specified colormap and scale.
+    ///
+    /// # Arguments
+    /// * `field` - Name of the metadata field to use for coloring
+    /// * `colormap` - Colormap to apply
+    /// * `scale_type` - Scaling function (linear or log)
+    ///
+    /// # Returns
+    /// Ok(()) if successful, Err if metadata field not found
+    ///
+    /// # Examples
+    /// ```
+    /// use viz_core::data::PointCloud;
+    /// use viz_core::color::{Viridis, ScaleType};
+    /// use glam::Vec3;
+    ///
+    /// let mut cloud = PointCloud::new(vec![Vec3::ZERO, Vec3::ONE, Vec3::new(2.0, 2.0, 2.0)])
+    ///     .with_metadata("height".to_string(), vec![0.0, 1.0, 2.0]);
+    ///
+    /// cloud.apply_colormap("height", &Viridis, ScaleType::Linear).unwrap();
+    /// assert!(cloud.colors().is_some());
+    /// ```
+    pub fn apply_colormap(
+        &mut self,
+        field: &str,
+        colormap: &dyn Colormap,
+        scale_type: ScaleType,
+    ) -> Result<(), String> {
+        let values = self
+            .metadata
+            .get(field)
+            .ok_or_else(|| format!("Metadata field '{}' not found", field))?;
+
+        // Find min/max for scaling
+        let min = values.iter().copied().fold(f32::INFINITY, f32::min);
+        let max = values.iter().copied().fold(f32::NEG_INFINITY, f32::max);
+
+        // Map values to colors
+        let colors: Vec<Vec4> = values
+            .iter()
+            .map(|&value| {
+                let t = ColorScale::map(value, min, max, scale_type);
+                colormap.sample(t)
+            })
+            .collect();
+
+        self.colors = Some(colors);
+        Ok(())
     }
 
     /// Compute bounding box (cached)
