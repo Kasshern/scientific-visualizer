@@ -1,1 +1,5 @@
-// Color module - will implement in Phase 5
+mod colormap;
+mod scale;
+
+pub use colormap::{Colormap, Viridis, Plasma, Inferno, Turbo};
+pub use scale::{ColorScale, ScaleType};
