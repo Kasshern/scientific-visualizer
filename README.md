@@ -2,9 +2,9 @@
 
 A high-performance scientific data visualization engine in Rust with GPU acceleration, cross-platform support (native + WASM), and real-time rendering capabilities.
 
-## Status: Phase 4 Complete ✓
+## Status: Phase 5 Complete ✓
 
-**UI Integration** - Professional egui interface with performance metrics, interactive controls, and real-time visualization tuning.
+**Colormap System** - Scientific color mapping with Viridis, Plasma, Inferno, and Turbo colormaps. Data-driven visualization with linear and logarithmic scaling.
 
 ## Features (Planned)
 
@@ -34,9 +34,11 @@ cargo run -p examples --bin scatter_3d
 # Controls: Left-drag to rotate, Shift-drag to pan, Scroll to zoom
 # Press 1 for spiral (1K points), 2 for cube (10K points), R to reset
 
-# Run the 3D scatter plot with UI (Phase 4) ⭐ RECOMMENDED
+# Run the 3D scatter plot with UI and Colormaps (Phase 5) ⭐ RECOMMENDED
 cargo run -p examples --bin scatter_3d_ui
-# Full UI with performance metrics, point size control, dataset selector
+# Full UI with performance metrics, colormap selector, dataset switching
+# Choose from Viridis, Plasma, Inferno, Turbo colormaps
+# Toggle linear/log scaling, adjust point size, pick background color
 # Press H to toggle UI visibility
 ```
 
@@ -63,29 +65,29 @@ scientific-visualizer/
 - **Data**: arrow 50.0, parquet 50.0, ndarray 0.15
 - **Async**: tokio 1.35, rayon 1.8
 
-## Phase 4 Complete ✓
+## Phase 5 Complete ✓
 
-- [x] egui-wgpu integration (UiContext)
-- [x] Performance metrics tracking and display
-- [x] Real-time FPS counter with frame time graph
-- [x] Control panel with interactive sliders
-- [x] Point size adjustment (1-20 pixels)
-- [x] Dataset selector dropdown
-- [x] Background color picker
-- [x] H key to toggle UI visibility
-- [x] 39 tests passing (all phases)
-- [x] 60+ FPS with UI enabled @ 10K points
+- [x] Colormap trait with 4 scientific colormaps
+- [x] Viridis (256-LUT), Plasma, Inferno, Turbo (8-LUT each)
+- [x] Linear and logarithmic color scaling
+- [x] PointCloud metadata-driven coloring
+- [x] UI colormap selector with live preview
+- [x] Dynamic colormap switching in real-time
+- [x] Enhanced scatter_3d_ui example with metadata
+- [x] 52 tests passing (17 new colormap tests)
+- [x] <1μs color lookup, 60+ FPS maintained
 
 **Phase 1**: ✅ GPU Context & Foundation
 **Phase 2**: ✅ Camera & Math Systems
 **Phase 3**: ✅ Basic Data & Rendering
 **Phase 4**: ✅ UI Integration
+**Phase 5**: ✅ Colormap System
 
 **Tested On**: Apple M1 Max (Metal backend)
 
-## Next: Phase 5 - Colormap System
+## Next: Phase 6 - Data Loading
 
-Coming soon: Scientific colormaps (Viridis, Plasma, Inferno) for data-driven coloring.
+Load real-world datasets from CSV and Parquet files with async loading and progress indicators.
 
 ## License
 
