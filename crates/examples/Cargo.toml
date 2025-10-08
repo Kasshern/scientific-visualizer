@@ -16,6 +16,10 @@ path = "src/bin/camera_movement.rs"
 name = "scatter_3d"
 path = "src/bin/scatter_3d.rs"
 
+[[bin]]
+name = "scatter_3d_ui"
+path = "src/bin/scatter_3d_ui.rs"
+
 [dependencies]
 viz-core = { path = "../viz-core" }
 viz-plots = { path = "../viz-plots" }
