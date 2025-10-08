@@ -95,6 +95,9 @@ pub struct ControlPanel {
     pub show_grid: bool,
     pub dataset_index: usize,
     pub background_color: [f32; 3],
+    pub colormap_index: usize,
+    pub metadata_field: String,
+    pub use_log_scale: bool,
 }
 
 impl Default for ControlPanel {
@@ -104,6 +107,9 @@ impl Default for ControlPanel {
             show_grid: false,
             dataset_index: 0,
             background_color: [0.05, 0.05, 0.08],
+            colormap_index: 0,
+            metadata_field: String::new(),
+            use_log_scale: false,
         }
     }
 }
@@ -152,6 +158,34 @@ impl ControlPanel {
 
                 ui.separator();
 
+                // Colormap selector
+                ui.label("Colormap:");
+                let colormap_names = ["Viridis", "Plasma", "Inferno", "Turbo"];
+                let old_colormap = self.colormap_index;
+                egui::ComboBox::from_label("colormap_select")
+                    .selected_text(colormap_names[self.colormap_index])
+                    .show_ui(ui, |ui| {
+                        for (i, &name) in colormap_names.iter().enumerate() {
+                            ui.selectable_value(&mut self.colormap_index, i, name);
+                        }
+                    });
+
+                if self.colormap_index != old_colormap {
+                    changed = true;
+                }
+
+                // Colormap preview
+                self.draw_colormap_preview(ui, self.colormap_index);
+
+                ui.separator();
+
+                // Scale type toggle
+                if ui.checkbox(&mut self.use_log_scale, "Log Scale").changed() {
+                    changed = true;
+                }
+
+                ui.separator();
+
                 // Grid toggle
                 if ui.checkbox(&mut self.show_grid, "Show Grid").changed() {
                     changed = true;
@@ -178,6 +212,57 @@ impl ControlPanel {
             });
 
         changed
+    }
+
+    /// Draw a colormap preview strip
+    fn draw_colormap_preview(&self, ui: &mut egui::Ui, colormap_index: usize) {
+        use crate::color::{Colormap, Viridis, Plasma, Inferno, Turbo};
+
+        let colormap: &dyn Colormap = match colormap_index {
+            0 => &Viridis,
+            1 => &Plasma,
+            2 => &Inferno,
+            3 => &Turbo,
+            _ => &Viridis,
+        };
+
+        let height = 20.0;
+        let width = ui.available_width();
+        let (rect, _) = ui.allocate_exact_size(
+            egui::vec2(width, height),
+            egui::Sense::hover(),
+        );
+
+        if ui.is_rect_visible(rect) {
+            let painter = ui.painter();
+            let steps = 64;
+
+            for i in 0..steps {
+                let t = i as f32 / (steps - 1) as f32;
+                let color = colormap.sample(t);
+
+                let x0 = rect.min.x + (width * i as f32 / steps as f32);
+                let x1 = rect.min.x + (width * (i + 1) as f32 / steps as f32);
+
+                let segment_rect = egui::Rect::from_min_max(
+                    egui::pos2(x0, rect.min.y),
+                    egui::pos2(x1, rect.max.y),
+                );
+
+                painter.rect_filled(
+                    segment_rect,
+                    0.0,
+                    egui::Color32::from_rgb(
+                        (color.x * 255.0) as u8,
+                        (color.y * 255.0) as u8,
+                        (color.z * 255.0) as u8,
+                    ),
+                );
+            }
+
+            // Draw border
+            painter.rect_stroke(rect, 0.0, (1.0, egui::Color32::from_gray(100)));
+        }
     }
 
     /// Get background color as wgpu Color
